@@ -63,7 +63,7 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/findAllTransactions/{acountNumber}")
+    @GetMapping(value = "/findAllTransactions/{accountNumber}")
     public ResponseEntity<List<TransactionDTO>> findAllTransactions(@PathVariable(value = "accountNumber") Long accId){
         List<Transaction> transactions = service.findAllTransactionByAccNumber(accId);
         return new ResponseEntity<>(transactionMapper.toDtoes(transactions),HttpStatus.OK);
