@@ -13,6 +13,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExeptionHandler {
 
+
+
     @ExceptionHandler(value = NotFoundExeption.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleNotFoundException(NotFoundExeption exp) {
