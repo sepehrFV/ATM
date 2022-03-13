@@ -3,7 +3,9 @@ package ir.mapsa.springatm.exeptions;
 import ir.mapsa.springatm.enums.ExpMessages;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -12,6 +14,14 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExeptionHandler {
+
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exp){
+        Map<String, String> exmas = new HashMap<>();
+        exmas.put(ExpMessages.NOT_FOUND.name(), exp.getMessage());
+        return new ResponseEntity<>(exmas, HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(value = NotFoundExeption.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

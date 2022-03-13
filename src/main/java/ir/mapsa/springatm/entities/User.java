@@ -1,5 +1,6 @@
 package ir.mapsa.springatm.entities;
 
+import ir.mapsa.springatm.enums.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,29 +16,37 @@ import javax.validation.constraints.Size;
 @Data
 @Audited
 @Builder
-public class Person extends BaseEntity {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "p_id")
+    @Column(name = "u_id")
     private Long id;
 
-    @Column(name = "p_name")
+    @Column(name = "u_name")
     @Size(min = 3,max = 10)
     private String name;
 
-    @Column(name = "p_family")
+    @Column(name = "u_family")
     @Size(min = 3,max = 10)
     private String family;
 
-    @Column(name = "p_national_ID")
-    @Min(10)
+    @Column(name = "u_username")
+    private String username;
+
+    @Column(name = "u_password")
+    private String password;
+
+    @Column(name = "u_national_ID")
+    @Size(min = 10,max = 10)
     private String national_ID;
 
-
-    @Column(name = "p_age")
+    @Column(name = "u_age")
     @Min(18)
     private Integer age;
+
+    @Enumerated(value = EnumType.STRING)
+    private Roles role;
 
 
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-03-09T00:48:57+0330",
+    date = "2022-03-13T14:12:46+0330",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 17.0.1 (Oracle Corporation)"
 )
 @Component
@@ -24,6 +24,12 @@ public class TransactionMapperImpl implements TransactionMapper {
 
         TransactionBuilder transaction = Transaction.builder();
 
+        transaction.id( dto.getId() );
+        transaction.amount( dto.getAmount() );
+        transaction.account( dto.getAccount() );
+        transaction.type( dto.getType() );
+        transaction.date( dto.getDate() );
+
         return transaction.build();
     }
 
@@ -34,6 +40,12 @@ public class TransactionMapperImpl implements TransactionMapper {
         }
 
         TransactionDTO transactionDTO = new TransactionDTO();
+
+        transactionDTO.setId( entity.getId() );
+        transactionDTO.setAmount( entity.getAmount() );
+        transactionDTO.setAccount( entity.getAccount() );
+        transactionDTO.setType( entity.getType() );
+        transactionDTO.setDate( entity.getDate() );
 
         return transactionDTO;
     }
@@ -70,6 +82,22 @@ public class TransactionMapperImpl implements TransactionMapper {
     public void update(Transaction entity, TransactionDTO dto) {
         if ( dto == null ) {
             return;
+        }
+
+        if ( dto.getId() != null ) {
+            entity.setId( dto.getId() );
+        }
+        if ( dto.getAmount() != null ) {
+            entity.setAmount( dto.getAmount() );
+        }
+        if ( dto.getAccount() != null ) {
+            entity.setAccount( dto.getAccount() );
+        }
+        if ( dto.getType() != null ) {
+            entity.setType( dto.getType() );
+        }
+        if ( dto.getDate() != null ) {
+            entity.setDate( dto.getDate() );
         }
     }
 }

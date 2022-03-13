@@ -9,6 +9,9 @@ import ir.mapsa.springatm.generics.GenericServiceImp;
 import ir.mapsa.springatm.repositories.TransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -38,6 +41,11 @@ public class TransactionService extends GenericServiceImp<Transaction, Long> imp
         return repository.findByDate(date);
     }
 
+    @Override
+    public Page<Transaction> findTransactionPageByAccNumber(int page, int size, Long accId) {
+        Pageable pageable = PageRequest.of(page,size);
+        return repository.findAllByAccount_AccountNumber(accId,pageable);
+    }
 
 
 }

@@ -5,7 +5,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class PersonDTO {
+public class UserDTO {
 
     @NotNull
     @Size(min = 3, max = 10)
@@ -19,6 +19,8 @@ public class PersonDTO {
     @Max(10)
     @NotNull
     private String national_ID;
+
+    private String username;
 
     @Min(18)
     @NotNull

@@ -1,10 +1,10 @@
 package ir.mapsa.springatm.controllers;
 
 import ir.mapsa.springatm.dto.AccountDTO;
-import ir.mapsa.springatm.dto.PersonDTO;
+import ir.mapsa.springatm.dto.UserDTO;
 import ir.mapsa.springatm.dto.TransactionDTO;
 import ir.mapsa.springatm.mappers.AccountMapper;
-import ir.mapsa.springatm.mappers.PersonMapper;
+import ir.mapsa.springatm.mappers.UserMapper;
 import ir.mapsa.springatm.mappers.TransactionMapper;
 import ir.mapsa.springatm.entities.Account;
 import ir.mapsa.springatm.entities.Transaction;
@@ -24,28 +24,32 @@ public class AccountController {
     private final IAccountService service;
     private final AccountMapper mapper;
     private final TransactionMapper transactionMapper;
-    private final PersonMapper personMapper;
+    private final UserMapper userMapper;
 
+    @GetMapping(value = "/page")
+    public String page(){
+        return "This is account page";
+    }
 
-    @PostMapping(value = "/create/{personId}")
-    public ResponseEntity<Void> createAccount(@PathVariable(name = "personId") Long personId, @RequestBody @Valid Account account){
-        service.createAccount(personId,account);
+    @PostMapping(value = "/{userId}")
+    public ResponseEntity<Void> createAccount(@PathVariable(name = "userId") Long userId, @RequestBody @Valid Account account){
+        service.createAccount(userId,account);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/findByAccountNumber/{accountNumber}")
+    @GetMapping(value = "/byAccountNumber/{accountNumber}")
     public ResponseEntity<AccountDTO> findByAccountNumber(@PathVariable(name = "accountNumber") Long accId){
 
         return new ResponseEntity<>(mapper.toDto(service.findById(accId).get()),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/findAll")
+    @GetMapping(value = "/all")
     public ResponseEntity<List<AccountDTO>> findAll(){
         return ResponseEntity.ok(mapper.toDtoes(service.findAll()));
     }
 
-    @DeleteMapping(value = "/deleteById/{accId}")
+    @DeleteMapping(value = "/byId/{accId}")
     public ResponseEntity<Void> deleteById(@PathVariable(value = "accId") Long accId){
         service.deleteById(accId);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -63,18 +67,26 @@ public class AccountController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/findAllTransactions/{acountNumber}")
+    @GetMapping(value = "/transfer/{senderAccId}/{receiverAccId}/{amount}")
+    public ResponseEntity<Void> transfer(@PathVariable(value = "senderAccId") Long accId,
+                                         @PathVariable(value = "receiverAccId") Long receiverAccId,
+                                         @PathVariable(value = "amount") Double amount){
+        service.transfer(accId,receiverAccId,amount);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping(value = "/allTransactions/{accountNumber}")
     public ResponseEntity<List<TransactionDTO>> findAllTransactions(@PathVariable(value = "accountNumber") Long accId){
         List<Transaction> transactions = service.findAllTransactionByAccNumber(accId);
         return new ResponseEntity<>(transactionMapper.toDtoes(transactions),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/showBalance/{accountNumber}")
+
+    @GetMapping(value = "/balance/{accountNumber}")
     public ResponseEntity<Double> showBalance(@PathVariable(value = "accountNumber") Long accId){
         return new ResponseEntity<>(service.showBalance(accId),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/showPersonFullName/{accountNumber}")
+    @GetMapping(value = "/personFullName/{accountNumber}")
     public ResponseEntity<String> showOwnerFullName(@PathVariable(value = "accountNumber") Long accId){
         return new ResponseEntity<>(service.ownerFullName(accId),HttpStatus.OK);
     }
@@ -84,13 +96,13 @@ public class AccountController {
         return new ResponseEntity<>(service.validatePassword(accId, pass),HttpStatus.OK);
     }
 
-    @GetMapping(value = "/findPersonByAccountNumber/{accountNumber}")
-    public ResponseEntity<PersonDTO> findPersonByAccNum(@PathVariable(value = "accountNumber") Long accId){
-        return new ResponseEntity<>(personMapper.toDto(service.getPersonInfoByAccountNumber(accId)),HttpStatus.OK);
+    @GetMapping(value = "/userByAccountNumber/{accountNumber}")
+    public ResponseEntity<UserDTO> findPersonByAccNum(@PathVariable(value = "accountNumber") Long accId){
+        return new ResponseEntity<>(userMapper.toDto(service.getUserInfoByAccountNumber(accId)),HttpStatus.OK);
     }
-    @GetMapping(value = "/findPersonByAccountNumber/{personId}")
-    public ResponseEntity<List<AccountDTO>> findAccountByPersonId(@PathVariable(value = "personId") Long personId){
-        return new ResponseEntity<>(mapper.toDtoes(service.getAccountsByPersonId(personId)),HttpStatus.OK);
+    @GetMapping(value = "/findUserByAccountNumber/{userId}")
+    public ResponseEntity<List<AccountDTO>> findAccountByPersonId(@PathVariable(value = "userId") Long userId){
+        return new ResponseEntity<>(mapper.toDtoes(service.getAccountsByPersonId(userId)),HttpStatus.OK);
     }
 
 

@@ -2,13 +2,15 @@ package ir.mapsa.springatm.services;
 
 import ir.mapsa.springatm.exeptions.BusinessException;
 import ir.mapsa.springatm.entities.Account;
-import ir.mapsa.springatm.entities.Person;
+import ir.mapsa.springatm.entities.User;
 import ir.mapsa.springatm.entities.Transaction;
 import ir.mapsa.springatm.enums.TransactionType;
 import ir.mapsa.springatm.generics.GenericRepository;
 import ir.mapsa.springatm.generics.GenericServiceImp;
 import ir.mapsa.springatm.repositories.AccountRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class AccountService extends GenericServiceImp<Account, Long> implements IAccountService {
 
 
-    private IPersonService personService;
+    private IUserService personService;
     private ITransactionService transactionService;
     private AccountRepository repository;
 
@@ -34,10 +36,10 @@ public class AccountService extends GenericServiceImp<Account, Long> implements 
 
 
     @Override
-    public Account createAccount(Long personId, Account account) {
+    public Account createAccount(Long userId, Account account) {
 
-        Person person = personService.findById(personId).get();
-        account.setPerson(person);
+        User user = personService.findById(userId).get();
+        account.setUser(user);
 
         return repository.save(account);
     }
@@ -74,12 +76,18 @@ public class AccountService extends GenericServiceImp<Account, Long> implements 
             save(account);
             Transaction transaction = Transaction.builder()
                     .account(account)
-                    .type(TransactionType.WITHRAW)
+                    .type(TransactionType.WITHDRAW)
                     .amount(amount)
                     .date(new Date())
                     .build();
             transactionService.save(transaction);
         }
+    }
+
+    @Override
+    public void transfer(Long accId, Long receiverAccId, Double amount) {
+        withdraw(accId,amount);
+        deposit(receiverAccId,amount);
     }
 
     @Override
@@ -90,7 +98,7 @@ public class AccountService extends GenericServiceImp<Account, Long> implements 
     @Override
     public String ownerFullName(Long accId) {
         Account account = findById(accId).get();
-        String fullName = account.getPerson().getName() + " " + account.getPerson().getFamily();
+        String fullName = account.getUser().getName() + " " + account.getUser().getFamily();
         return fullName;
     }
 
@@ -103,14 +111,14 @@ public class AccountService extends GenericServiceImp<Account, Long> implements 
     }
 
     @Override
-    public Person getPersonInfoByAccountNumber(Long accNum) {
+    public User getUserInfoByAccountNumber(Long accNum) {
         Optional<Account> account = repository.findById(accNum);
-        return account.get().getPerson();
+        return account.get().getUser();
     }
 
     @Override
-    public List<Account> getAccountsByPersonId(Long personId) {
-        return repository.findAllByPerson_Id(personId);
+    public List<Account> getAccountsByPersonId(Long userId) {
+        return repository.findAllByUser_Id(userId);
     }
 
     @Override
@@ -120,6 +128,7 @@ public class AccountService extends GenericServiceImp<Account, Long> implements 
         } else throw new NotFoundException("id not exists");
 
     }
+
 
 
 }
