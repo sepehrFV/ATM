@@ -1,7 +1,7 @@
 package ir.mapsa.springatm.dto;
 
 
-import ir.mapsa.springatm.entities.Person;
+import ir.mapsa.springatm.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class AccountDTO {
     @Min(100)
     private Double balance;
 
-    private Person person;
+    private User user;
 
 
 }

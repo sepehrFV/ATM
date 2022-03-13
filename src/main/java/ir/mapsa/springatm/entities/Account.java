@@ -36,7 +36,7 @@ public class Account extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "p_id")
     @NotNull
-    private Person person;
+    private User user;
 
 
 }
